@@ -1,17 +1,21 @@
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   before_action :require_user_logged_in
+  before_action :correct_user, only: [:destroy]
   
   def index
-    @tasks = Task.order(id: :desc).page(params[:page]).per(10)
-    render 'tasks/index'
+    if logged_in?
+      @task = current_user.tasks.build
+      @tasks = current_user.tasks.order(id: :desc).page(params[:page]).per(10)
+      render 'tasks/index'
+    end
   end
-  
+
   def show
   end
   
   def new
-    @task = Task.new
+   @task = current_user.tasks.build
   end
 
   def create
@@ -23,7 +27,7 @@ class TasksController < ApplicationController
     else
       @tasks = current_user.tasks.order(id: :desc).page(params[:page])
       flash.now[:danger] = 'Task が登録されませんでした'
-      render 'toppages/index'
+      render 'tasks/new'
     end
   end
   
@@ -50,7 +54,11 @@ class TasksController < ApplicationController
   private
   
   def set_task
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find_by(id: params[:id])
+  end
+  
+  def correct_user
+    @task = current_user.tasks.find_by(id: params[:id])
   end
   
   def task_params

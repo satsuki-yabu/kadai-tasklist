@@ -1,4 +1,6 @@
 Rails.application.configure do
+  
+  
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -56,3 +58,5 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end
+
+ BetterErrors::Middleware.allow_ip! "0.0.0.0/0" 
