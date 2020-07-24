@@ -3,16 +3,10 @@ class TasksController < ApplicationController
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
   
   def index
-    if logged_in?
-      @task = current_user.tasks.build
       @tasks = current_user.tasks.order(id: :desc).page(params[:page])
-      render 'tasks/index'
-    end
   end
 
   def show
-    @task = current_user.tasks.find_by(id: params[:id])
-    
     if @task.nil?
     redirect_to root_url
     end  
@@ -36,8 +30,6 @@ class TasksController < ApplicationController
   end
   
   def edit
-    @task = current_user.tasks.find_by(id: params[:id])
-    
     if @task.nil?
     redirect_to root_url
     end  
