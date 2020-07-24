@@ -4,7 +4,8 @@ class TasksController < ApplicationController
   
   def index
     if logged_in?
-      @tasks = Task.order(id: :desc).page(params[:page]).per(10)
+      @task = current_user.tasks.build
+      @tasks = current_user.tasks.order(id: :desc).page(params[:page])
       render 'tasks/index'
     end
   end
@@ -35,6 +36,11 @@ class TasksController < ApplicationController
   end
   
   def edit
+    @task = current_user.tasks.find_by(id: params[:id])
+    
+    if @task.nil?
+    redirect_to root_url
+    end  
   end
   
   
